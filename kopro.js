@@ -63,7 +63,7 @@
 			target.koPro.unfilteredCollectionIndex++;
 			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
 				if (currentCount >= target.batchSize) {
-					target.valueHasMutated();
+					//target.valueHasMutated();
 					setTimeout(function() { doFilter(1) }, 0);
 				}
 				else {
