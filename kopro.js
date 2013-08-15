@@ -12,12 +12,14 @@
 		factory(ko, ko.mapping = {});
 	}
 }(function (ko, exports) {
-	ko.extenders.koPro = function(target, filterFunction) {
+	ko.extenders.koPro = function(target, filterFunction, batchSize) {
 		target.koPro = {};
 		target.koPro.unfilteredCollection = [];
 		target.koPro.unfilteredCollectionIndex = 0;
 		target.koPro.isFiltering = false;
 		target.filterFunction = filterFunction;
+		target.batchSize = batchSize || 2;
+
 		target.add = target.add || function(item) { target.push(item) };
         target.clear = target.clear || function() { target([]) };
 
@@ -60,7 +62,7 @@
 
 			target.koPro.unfilteredCollectionIndex++;
 			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
-				if (currentCount >= 2) {
+				if (currentCount >= target.batchSize) {
 					setTimeout(function() { doFilter(1) }, 0);
 				}
 				else {
