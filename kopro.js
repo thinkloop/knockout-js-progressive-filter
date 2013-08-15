@@ -12,13 +12,13 @@
 		factory(ko, ko.mapping = {});
 	}
 }(function (ko, exports) {
-	ko.extenders.koPro = function(target, filterFunction, batchSize) {
+	ko.extenders.koPro = function(target, args) {
 		target.koPro = {};
 		target.koPro.unfilteredCollection = [];
 		target.koPro.unfilteredCollectionIndex = 0;
 		target.koPro.isFiltering = false;
-		target.filterFunction = filterFunction;
-		target.batchSize = batchSize || 2;
+		target.filterFunction = args.filterFunction;
+		target.batchSize = args.batchSize || 2;
 
 		target.add = target.add || function(item) { target().push(item) };
         target.clear = target.clear || function() { target([]) };
@@ -50,7 +50,7 @@
 
 		function doFilter(currentCount) {
 			var item,
-				currentCount = currentCount || 1;
+				currentCount = currentCount || 0;
 
 			for (target.koPro.unfilteredCollectionIndex; target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length; target.koPro.unfilteredCollectionIndex++) {
 				item = target.koPro.unfilteredCollection[target.koPro.unfilteredCollectionIndex];
@@ -62,9 +62,9 @@
 
 			target.koPro.unfilteredCollectionIndex++;
 			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
-				if (currentCount >= target.batchSize) {
-					//target.valueHasMutated();
-					setTimeout(function() { doFilter(1) }, 0);
+				if (currentCount > target.batchSize) {
+					target.valueHasMutated();
+					setTimeout(function() { doFilter(0) }, 0);
 				}
 				else {
 					doFilter(currentCount + 1);
@@ -72,6 +72,7 @@
 				return;
 			}
 			else {
+                target.valueHasMutated();
 				target.koPro.unfilteredCollectionIndex = 0;
 				target.koPro.isFiltering = false;
 			}
