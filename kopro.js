@@ -18,6 +18,8 @@
 		target.koPro.unfilteredCollectionIndex = 0;
 		target.koPro.isFiltering = false;
 		target.filterFunction = filterFunction;
+		target.add = target.add || function(item) { target.push(item) };
+        target.clear = target.clear || function() { target([]) };
 
 		target.isFiltered = function(item) {
 			return target.filterFunction(item);
