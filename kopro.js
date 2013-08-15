@@ -1,9 +1,22 @@
-﻿define([], function() {
-	ko.extenders.progressiveFilter = function(target, filterFunction) {
-		target.progressiveFilter = {};
-		target.progressiveFilter.unfilteredCollection = [];
-		target.progressiveFilter.unfilteredCollectionIndex = 0;
-		target.progressiveFilter.isFiltering = false;
+﻿(function (factory) {
+	// Module systems magic dance.
+
+	if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
+		// CommonJS or Node: hard-coded dependency on "knockout"
+		factory(require("knockout"), exports);
+	} else if (typeof define === "function" && define["amd"]) {
+		// AMD anonymous module with hard-coded dependency on "knockout"
+		define(["knockout", "exports"], factory);
+	} else {
+		// <script> tag: use the global `ko` object, attaching a `mapping` property
+		factory(ko, ko.mapping = {});
+	}
+}(function (ko, exports) {
+	ko.extenders.koPro = function(target, filterFunction) {
+		target.koPro = {};
+		target.koPro.unfilteredCollection = [];
+		target.koPro.unfilteredCollectionIndex = 0;
+		target.koPro.isFiltering = false;
 		target.filterFunction = filterFunction;
 
 		target.isFiltered = function(item) {
@@ -22,11 +35,11 @@
 		};
 
 		target.filterProgressive = function(unfilteredCollection) {
-			target.progressiveFilter.unfilteredCollection = unfilteredCollection;
-			target.progressiveFilter.unfilteredCollectionIndex = 0;
+			target.koPro.unfilteredCollection = unfilteredCollection;
+			target.koPro.unfilteredCollectionIndex = 0;
 			target.clear();
-			if (!target.progressiveFilter.isFiltering) {
-				target.progressiveFilter.isFiltering = true;
+			if (!target.koPro.isFiltering) {
+				target.koPro.isFiltering = true;
 				doFilter();
 			}
 		};
@@ -35,16 +48,16 @@
 			var item,
 				currentCount = currentCount || 1;
 
-			for (target.progressiveFilter.unfilteredCollectionIndex; target.progressiveFilter.unfilteredCollectionIndex < target.progressiveFilter.unfilteredCollection.length; target.progressiveFilter.unfilteredCollectionIndex++) {
-				item = target.progressiveFilter.unfilteredCollection[target.progressiveFilter.unfilteredCollectionIndex];
+			for (target.koPro.unfilteredCollectionIndex; target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length; target.koPro.unfilteredCollectionIndex++) {
+				item = target.koPro.unfilteredCollection[target.koPro.unfilteredCollectionIndex];
 				if (item && target.filterFunction(item)) {
 					target.add(item);
 					break;
 				}
 			}
 
-			target.progressiveFilter.unfilteredCollectionIndex++;
-			if (target.progressiveFilter.unfilteredCollectionIndex < target.progressiveFilter.unfilteredCollection.length) {
+			target.koPro.unfilteredCollectionIndex++;
+			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
 				if (currentCount >= 2) {
 					setTimeout(function() { doFilter(1) }, 0);
 				}
@@ -54,40 +67,9 @@
 				return;
 			}
 			else {
-				target.progressiveFilter.unfilteredCollectionIndex = 0;
-				target.progressiveFilter.isFiltering = false;
+				target.koPro.unfilteredCollectionIndex = 0;
+				target.koPro.isFiltering = false;
 			}
 		}
 	}
-});
-
-function addProgressive(allItems, filteredItems, currentCount) {
-	var currentCount = currentCount || 0;
-	if (allItems.length < currentCount) {
-		filteredItems.push(allItems[currentCount]);
-		setTimeout(function(allItems, filteredItems, currentCount) { addProgressive(allItems, filteredItems, currentCount) }, 0, allItems, filteredItems, currentCount++);
-	}
-
-	for (target.progressiveFilter.unfilteredCollectionIndex; target.progressiveFilter.unfilteredCollectionIndex < target.progressiveFilter.unfilteredCollection.length; target.progressiveFilter.unfilteredCollectionIndex++) {
-		item = target.progressiveFilter.unfilteredCollection[target.progressiveFilter.unfilteredCollectionIndex];
-		if (item && target.filterFunction(item)) {
-			target.add(item);
-			break;
-		}
-	}
-
-	target.progressiveFilter.unfilteredCollectionIndex++;
-	if (target.progressiveFilter.unfilteredCollectionIndex < target.progressiveFilter.unfilteredCollection.length) {
-		if (currentCount >= 2) {
-			setTimeout(function() { doFilter(1) }, 0);
-		}
-		else {
-			doFilter(currentCount + 1);
-		}
-		return;
-	}
-	else {
-		target.progressiveFilter.unfilteredCollectionIndex = 0;
-		target.progressiveFilter.isFiltering = false;
-	}
-}
+}));
