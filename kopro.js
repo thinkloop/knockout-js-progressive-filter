@@ -20,7 +20,7 @@
 		target.filterFunction = filterFunction;
 		target.batchSize = batchSize || 2;
 
-		target.add = target.add || function(item) { target.push(item) };
+		target.add = target.add || function(item) { target().push(item) };
         target.clear = target.clear || function() { target([]) };
 
 		target.isFiltered = function(item) {
@@ -63,6 +63,7 @@
 			target.koPro.unfilteredCollectionIndex++;
 			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
 				if (currentCount >= target.batchSize) {
+					target.valueHasMutated();
 					setTimeout(function() { doFilter(1) }, 0);
 				}
 				else {
