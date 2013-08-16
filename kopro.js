@@ -24,8 +24,8 @@
 		target.koPro.filterFunction = args.filterFunction;
 		target.koPro.batchSize = args.batchSize || 1;
 
-		target.koPro.add = target.add || function(item) { target().push(item) };
-        target.koPro.clear = target.clear || function() { target([]) };
+		target.koPro.add = args.addFunction || function(item) { target().push(item) };
+        target.koPro.clear = args.clearFunction || function() { target([]) };
 
 		target.isFiltered = function(item) {
 			return !target.koPro.filterFunction || target.koPro.filterFunction(item);
