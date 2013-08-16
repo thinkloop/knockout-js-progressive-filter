@@ -21,31 +21,31 @@
 		target.koPro.unfilteredCollection = [];
 		target.koPro.unfilteredCollectionIndex = 0;
 		target.koPro.isFiltering = false;
-		target.filterFunction = args.filterFunction;
-		target.batchSize = args.batchSize || 1;
+		target.koPro.filterFunction = args.filterFunction;
+		target.koPro.batchSize = args.batchSize || 1;
 
-		target.add = target.add || function(item) { target().push(item) };
-        target.clear = target.clear || function() { target([]) };
+		target.koPro.add = target.add || function(item) { target().push(item) };
+        target.koPro.clear = target.clear || function() { target([]) };
 
 		target.isFiltered = function(item) {
-			return target.filterFunction(item);
+			return !target.koPro.filterFunction || target.koPro.filterFunction(item);
 		};
 
 		target.filter = function(unfilteredCollection) {
 			var filteredCollection = [];
 			for (var i = 0; i < unfilteredCollection.length; i++) {
-				if (target.filterFunction(unfilteredCollection[i])) {
+				if (target.isFiltered(unfilteredCollection[i])) {
 					filteredCollection.push(unfilteredCollection[i]);
 				}
 			}
-			target.clear();
+			target.koPro.clear();
 			target(filteredCollection);
 		};
 
 		target.filterProgressive = function(unfilteredCollection) {
 			target.koPro.unfilteredCollection = unfilteredCollection;
 			target.koPro.unfilteredCollectionIndex = 0;
-			target.clear();
+			target.koPro.clear();
 			if (!target.koPro.isFiltering) {
 				target.koPro.isFiltering = true;
 				requestAnimationFrame(doFilter);
@@ -57,15 +57,15 @@
 
 			for (target.koPro.unfilteredCollectionIndex; target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length; target.koPro.unfilteredCollectionIndex++) {
 				item = target.koPro.unfilteredCollection[target.koPro.unfilteredCollectionIndex];
-				if (item && target.filterFunction(item)) {
-					target.add(item);
+				if (item && target.isFiltered(item)) {
+					target.koPro.add(item);
 					break;
 				}
 			}
 
 			target.koPro.unfilteredCollectionIndex++;
 			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
-				if (currentCount > target.batchSize) {
+				if (currentCount > target.koPro.batchSize) {
 					target.valueHasMutated();
 					currentCount = 0;
 					requestAnimationFrame(doFilter)
