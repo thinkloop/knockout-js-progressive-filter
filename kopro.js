@@ -13,12 +13,16 @@
 	}
 }(function (ko, exports) {
 	ko.extenders.koPro = function(target, args) {
+		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame,
+			currentCount = 0,
+			args = args || {};
+
 		target.koPro = {};
 		target.koPro.unfilteredCollection = [];
 		target.koPro.unfilteredCollectionIndex = 0;
 		target.koPro.isFiltering = false;
 		target.filterFunction = args.filterFunction;
-		target.batchSize = args.batchSize || 2;
+		target.batchSize = args.batchSize || 1;
 
 		target.add = target.add || function(item) { target().push(item) };
         target.clear = target.clear || function() { target([]) };
@@ -44,13 +48,12 @@
 			target.clear();
 			if (!target.koPro.isFiltering) {
 				target.koPro.isFiltering = true;
-				doFilter();
+				requestAnimationFrame(doFilter);
 			}
 		};
 
-		function doFilter(currentCount) {
-			var item,
-				currentCount = currentCount || 0;
+		function doFilter() {
+			var item;
 
 			for (target.koPro.unfilteredCollectionIndex; target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length; target.koPro.unfilteredCollectionIndex++) {
 				item = target.koPro.unfilteredCollection[target.koPro.unfilteredCollectionIndex];
@@ -64,10 +67,12 @@
 			if (target.koPro.unfilteredCollectionIndex < target.koPro.unfilteredCollection.length) {
 				if (currentCount > target.batchSize) {
 					target.valueHasMutated();
-					setTimeout(function() { doFilter(0) }, 0);
+					currentCount = 0;
+					requestAnimationFrame(doFilter)
 				}
 				else {
-					doFilter(currentCount + 1);
+					currentCount++;
+					doFilter();
 				}
 				return;
 			}
