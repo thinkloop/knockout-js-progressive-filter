@@ -12,7 +12,7 @@ Take a look at this example fiddle of [filter-as-you-type](http://jsfiddle.net/t
 ```html
 var viewModel = {
   self.filteredItems = ko.observableArray();
-  self.filteredItems.extend({koPro: {}});
+  self.filteredItems.extend({progressivefilter: {}});
 }
 ```
 
@@ -20,7 +20,7 @@ var viewModel = {
 ```html
 var viewModel = {
   self.filteredItems = ko.observableArray();
-  self.filteredItems.extend({koPro: { batchSize: 3, filterFunction: isItemFiltered }});
+  self.filteredItems.extend({progressivefilter: { batchSize: 3, filterFunction: isItemFiltered }});
 }
 function isItemFiltered(item) {
   return item > 3;
@@ -31,10 +31,10 @@ function isItemFiltered(item) {
 ```html
 var viewModel = {
   self.filteredItems = ko.observableArray();
-  self.filteredItems.extend({koPro: { 
-    batchSize: 3, 
-    filterFunction: isItemFiltered, 
-    addFunction: addFunction, 
+  self.filteredItems.extend({progressivefilter: {
+    batchSize: 3,
+    filterFunction: isItemFiltered,
+    addFunction: addFunction,
     clearFunction: clearFunction }
   });
 }
