@@ -8,27 +8,29 @@
 		// AMD anonymous module with hard-coded dependency on "knockout"
 		define(["knockout", "exports"], factory);
 	} else {
-		// <script> tag: use the global `ko` object, attaching a `mapping` property
-		factory(ko, ko.mapping = {});
+		// <script> tag: use the global `ko` object
+		factory(ko, {});
 	}
 }(function (ko, exports) {
-	ko.extenders.koProgressiveFilter = function(target, args) {
+	ko.extenders.progressivefilter = function(target, args) {
 		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame,
 			currentCount = 0,
-			args = args || {};
+			args = args || {},
+			props = {};
 
-		target.koProgressiveFilter = {};
-		target.koProgressiveFilter.unfilteredCollection = [];
-		target.koProgressiveFilter.unfilteredCollectionIndex = 0;
-		target.koProgressiveFilter.isFiltering = false;
-		target.koProgressiveFilter.filterFunction = args.filterFunction;
-		target.koProgressiveFilter.batchSize = args.batchSize || 1;
+		target.progressivefilter = props;
 
-		target.koProgressiveFilter.add = args.addFunction || function(item) { target().push(item) };
-        target.koProgressiveFilter.clear = args.clearFunction || function() { target([]) };
+		props.unfilteredCollection = [];
+		props.unfilteredCollectionIndex = 0;
+		props.isFiltering = false;
+		props.filterFunction = args.filterFunction;
+		props.batchSize = args.batchSize || 1;
+
+		props.add = args.addFunction || function(item) { target().push(item) };
+        props.clear = args.clearFunction || function() { target([]) };
 
 		target.isFiltered = function(item) {
-			return !target.koProgressiveFilter.filterFunction || target.koProgressiveFilter.filterFunction(item);
+			return !props.filterFunction || props.filterFunction(item);
 		};
 
 		target.filter = function(unfilteredCollection) {
@@ -38,16 +40,16 @@
 					filteredCollection.push(unfilteredCollection[i]);
 				}
 			}
-			target.koProgressiveFilter.clear();
+			props.clear();
 			target(filteredCollection);
 		};
 
 		target.filterProgressive = function(unfilteredCollection) {
-			target.koProgressiveFilter.unfilteredCollection = unfilteredCollection;
-			target.koProgressiveFilter.unfilteredCollectionIndex = 0;
-			target.koProgressiveFilter.clear();
-			if (!target.koProgressiveFilter.isFiltering) {
-				target.koProgressiveFilter.isFiltering = true;
+			props.unfilteredCollection = unfilteredCollection;
+			props.unfilteredCollectionIndex = 0;
+			props.clear();
+			if (!props.isFiltering) {
+				props.isFiltering = true;
 				requestAnimationFrame(doFilter);
 			}
 		};
@@ -55,20 +57,20 @@
 		function doFilter() {
 			var item;
 
-			for (target.koProgressiveFilter.unfilteredCollectionIndex; target.koProgressiveFilter.unfilteredCollectionIndex < target.koProgressiveFilter.unfilteredCollection.length; target.koProgressiveFilter.unfilteredCollectionIndex++) {
-				item = target.koProgressiveFilter.unfilteredCollection[target.koProgressiveFilter.unfilteredCollectionIndex];
+			for (props.unfilteredCollectionIndex; props.unfilteredCollectionIndex < props.unfilteredCollection.length; props.unfilteredCollectionIndex++) {
+				item = props.unfilteredCollection[props.unfilteredCollectionIndex];
 				if (item && target.isFiltered(item)) {
-					target.koProgressiveFilter.add(item);
+					props.add(item);
 					break;
 				}
 			}
 
-			target.koProgressiveFilter.unfilteredCollectionIndex++;
-			if (target.koProgressiveFilter.unfilteredCollectionIndex < target.koProgressiveFilter.unfilteredCollection.length) {
-				if (currentCount > target.koProgressiveFilter.batchSize) {
+			props.unfilteredCollectionIndex++;
+			if (props.unfilteredCollectionIndex < props.unfilteredCollection.length) {
+				if (currentCount > props.batchSize) {
 					target.valueHasMutated();
 					currentCount = 0;
-					requestAnimationFrame(doFilter)
+					requestAnimationFrame(doFilter);
 				}
 				else {
 					currentCount++;
@@ -78,8 +80,8 @@
 			}
 			else {
                 target.valueHasMutated();
-				target.koProgressiveFilter.unfilteredCollectionIndex = 0;
-				target.koProgressiveFilter.isFiltering = false;
+				props.unfilteredCollectionIndex = 0;
+				props.isFiltering = false;
 			}
 		}
 	}
