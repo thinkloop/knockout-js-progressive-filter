@@ -11,25 +11,42 @@ Take a look at this [filter-as-you-type](http://jsfiddle.net/thinkloop/Mkg72/) e
 ###Basic Usage###
 ```html
 var viewModel = {
+  // main collection
+  self.items = ko.observableArray([1,2,3,4,5,6,7,8,9]);
+  
+  // filtered items collection
   self.filteredItems = ko.observableArray();
   self.filteredItems.extend({progressivefilter: {}});
+  
+  // progressively load all items into filteredItems
+  self.filteredItems.filterProgressive(self.items());
 }
 ```
 
 ###Common Usage###
 ```html
 var viewModel = {
+  self.items = ko.observableArray();
+  
   self.filteredItems = ko.observableArray();
-  self.filteredItems.extend({progressivefilter: { batchSize: 3, filterFunction: isItemFiltered }});
-}
-function isItemFiltered(item) {
-  return item > 3;
+  self.filteredItems.extend({progressivefilter: { 
+    batchSize: 3, 
+    filterFunction: function isItemFiltered(item) {
+      return item > 3;
+    } 
+  }});
+  
+  self.handleClick = function() {
+    self.filteredItems.filterProgressive(self.items.peek());
+  }
 }
 ```
 
 ###Advanced Usage###
 ```html
 var viewModel = {
+  self.items = ko.observableArray();
+  
   self.filteredItems = ko.observableArray();
   self.filteredItems.extend({progressivefilter: {
     batchSize: 3,
@@ -37,6 +54,10 @@ var viewModel = {
     addFunction: addFunction,
     clearFunction: clearFunction }
   });
+  
+  self.handleClick = function() {
+    self.filteredItems.filterProgressive(self.items.peek());
+  }  
 }
 function isItemFiltered(item) {
   return item > 3;
