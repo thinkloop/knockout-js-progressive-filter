@@ -47,6 +47,7 @@
 		target.filterProgressive = function(unfilteredCollection) {
 			props.unfilteredCollection = unfilteredCollection;
 			props.unfilteredCollectionIndex = 0;
+			currentCount = 0;
 			props.clear();
 			if (!props.isFiltering) {
 				props.isFiltering = true;
