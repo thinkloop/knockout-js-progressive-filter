@@ -65,9 +65,11 @@
 				}
 			}
 
+			currentCount++;
 			props.unfilteredCollectionIndex++;
+
 			if (props.unfilteredCollectionIndex < props.unfilteredCollection.length) {
-				if (currentCount > props.batchSize) {
+				if (currentCount >= props.batchSize) {
 					target.valueHasMutated();
 					currentCount = 0;
 					requestAnimationFrame(doFilter);
@@ -80,6 +82,7 @@
 			}
 			else {
                 target.valueHasMutated();
+                currentCount = 0;
 				props.unfilteredCollectionIndex = 0;
 				props.isFiltering = false;
 			}
