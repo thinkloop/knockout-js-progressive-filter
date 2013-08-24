@@ -45,7 +45,7 @@
 		};
 
 		target.filterProgressive = function(unfilteredCollection) {
-			props.unfilteredCollection = unfilteredCollection;
+			props.unfilteredCollection = unfilteredCollection.slice(0);
 			props.unfilteredCollectionIndex = 0;
 			currentCount = 0;
 			props.clear();
