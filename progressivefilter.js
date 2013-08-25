@@ -13,7 +13,7 @@
 	}
 }(function (ko, exports) {
 	ko.extenders.progressivefilter = function(target, args) {
-		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame,
+		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { setTimeout(callback, 0); },
 			currentCount = 0,
 			args = args || {},
 			props = {};
