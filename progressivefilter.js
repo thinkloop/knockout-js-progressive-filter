@@ -22,9 +22,9 @@
 
 		props.unfilteredCollection = [];
 		props.unfilteredCollectionIndex = 0;
-		props.isFiltering = false;
+		props.isFiltering = ko.observable(false);;
 		props.filterFunction = args.filterFunction;
-		props.batchSize = args.batchSize || 1;
+		props.batchSize = Math.max(parseInt(args.batchSize), 1);
 
 		props.add = args.addFunction || function(item) { target().push(item) };
         props.clear = args.clearFunction || function() { target([]) };
@@ -49,8 +49,8 @@
 			props.unfilteredCollectionIndex = 0;
 			currentCount = 0;
 			props.clear();
-			if (!props.isFiltering) {
-				props.isFiltering = true;
+			if (!props.isFiltering.peek()) {
+				props.isFiltering(true);
 				requestAnimationFrame(doFilter);
 			}
 		};
@@ -85,7 +85,7 @@
                 target.valueHasMutated();
                 currentCount = 0;
 				props.unfilteredCollectionIndex = 0;
-				props.isFiltering = false;
+				props.isFiltering(false);
 			}
 		}
 	}
