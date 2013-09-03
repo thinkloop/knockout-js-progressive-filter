@@ -13,7 +13,7 @@
 	}
 }(function (ko, exports) {
 	ko.extenders.progressivefilter = function(target, args) {
-		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { setTimeout(callback, 0); },
+		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { setTimeout(callback, 4); },
 			currentCount = 0,
 			args = args || {},
 			props = {};
@@ -26,8 +26,8 @@
 		props.filterFunction = args.filterFunction;
 		props.batchSize = Math.max(parseInt(args.batchSize), 1);
 
-		props.add = args.addFunction || function(item) { target().push(item) };
-        props.clear = args.clearFunction || function() { target([]) };
+		props.add = args.addFunction || function(item) { target().push(item); };
+        props.clear = args.clearFunction || function() { target([]); };
 
 		target.isFiltered = function(item) {
 			return !props.filterFunction || props.filterFunction(item);
@@ -88,5 +88,5 @@
 				props.isFiltering(false);
 			}
 		}
-	}
-}))
+	};
+}));
