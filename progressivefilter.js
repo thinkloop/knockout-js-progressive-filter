@@ -26,7 +26,7 @@
 		props.filterFunction = args.filterFunction;
 		props.batchSize = Math.max(parseInt(args.batchSize), 1);
 
-		props.add = args.addFunction || function(item) { target().push(item); };
+		props.add = args.addFunction || function(item) { target.peek().push(item); };
         props.clear = args.clearFunction || function() { target([]); };
 
 		target.isFiltered = function(item) {
