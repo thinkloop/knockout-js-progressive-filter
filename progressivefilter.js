@@ -22,7 +22,7 @@
 
 		props.unfilteredCollection = [];
 		props.unfilteredCollectionIndex = 0;
-		props.isFiltering = ko.observable(false);;
+		props.isFiltering = ko.observable(false);
 		props.filterFunction = args.filterFunction;
 		props.batchSize = Math.max(parseInt(args.batchSize), 1);
 
