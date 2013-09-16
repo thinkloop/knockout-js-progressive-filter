@@ -1,6 +1,5 @@
 ﻿(function (factory) {
-	// Module systems magic dance.
-
+	"use strict";
 	if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
 		// CommonJS or Node: hard-coded dependency on "knockout"
 		factory(require("knockout"), exports);
@@ -12,19 +11,20 @@
 		factory(ko, {});
 	}
 }(function (ko, exports) {
+	"use strict";
 	ko.extenders.progressivefilter = function(target, args) {
 		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { setTimeout(callback, 4); },
 			currentCount = 0,
-			args = args || {},
 			props = {};
 
+		args = args || {};
 		target.progressivefilter = props;
 
 		props.unfilteredCollection = [];
 		props.unfilteredCollectionIndex = 0;
 		props.isFiltering = ko.observable(false);
 		props.filterFunction = args.filterFunction;
-		props.batchSize = Math.max(parseInt(args.batchSize), 1);
+		props.batchSize = Math.max(parseInt(args.batchSize, 10), 1);
 
 		props.add = args.addFunction || function(item) { target.peek().push(item); };
         props.clear = args.clearFunction || function() { target([]); };
@@ -34,8 +34,9 @@
 		};
 
 		target.filter = function(unfilteredCollection) {
-			var filteredCollection = [];
-			for (var i = 0; i < unfilteredCollection.length; i++) {
+			var filteredCollection = [],
+				i;
+			for (i = 0; i < unfilteredCollection.length; i++) {
 				if (target.isFiltered(unfilteredCollection[i])) {
 					filteredCollection.push(unfilteredCollection[i]);
 				}
