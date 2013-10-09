@@ -1,5 +1,4 @@
-﻿(function (factory) {
-	"use strict";
+﻿(function(factory) {"use strict";
 	if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
 		// CommonJS or Node: hard-coded dependency on "knockout"
 		factory(require("knockout"), exports);
@@ -10,8 +9,7 @@
 		// <script> tag: use the global `ko` object
 		factory(ko, {});
 	}
-}(function (ko, exports) {
-	"use strict";
+}(function(ko, exports) {"use strict";
 	ko.extenders.progressivefilter = function(target, args) {
 		var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { setTimeout(callback, 4); },
 			currentCount = 0,
