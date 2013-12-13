@@ -9,7 +9,7 @@ It works by processing small, minimally-blocking chunks of data at a time, rende
 The example fiddle progressively loads 10,000 random "folders" on startup - notice that scrolling and the UI remain smooth. If you type some characters into the input box below the title, you will see the results filter down gradually and without blocking.
 
 ###Basic Usage###
-Progressively load all items in a collection one at a time.
+Progressively load all items in a collection, one-by-one.
 ```html
 var viewModel = {
   // main collection
@@ -25,22 +25,23 @@ var viewModel = {
 ```
 
 ###Common Usage###
-Progressively load items that match custom filter function in batches, rather than one at a time. 
+Progressively load items that match provided filter function, in batches (rather than one at a time). 
 ```html
 var viewModel = {
-  self.items = ko.observableArray();
+  self.items = ko.observableArray([1,2,3,4,5,6,7,8,9]);
   
   self.filteredItems = ko.observableArray();
   self.filteredItems.extend({progressivefilter: { 
-    batchSize: 3, 
+    // batch size
+    batchSize: 3,
+    
+    // filter function
     filterFunction: function isItemFiltered(item) {
       return item > 5;
     } 
   }});
   
-  self.handleClick = function() {
-    self.filteredItems.filterProgressive(self.items.peek());
-  }
+  self.filteredItems.filterProgressive(self.items.peek());
 }
 ```
 
@@ -48,19 +49,21 @@ var viewModel = {
 Use custom function for how an item gets added to collection. Use custom function for how collection is cleared.
 ```html
 var viewModel = {
-  self.items = ko.observableArray();
+  self.items = ko.observableArray([1,2,3,4,5,6,7,8,9]);
   
   self.filteredItems = ko.observableArray();
   self.filteredItems.extend({progressivefilter: {
     batchSize: 3,
     filterFunction: isItemFiltered,
+    
+    // custom add function
     addFunction: addFunction,
+    
+    // custom clear function
     clearFunction: clearFunction }
   });
   
-  self.handleClick = function() {
-    self.filteredItems.filterProgressive(self.items.peek());
-  }  
+  self.filteredItems.filterProgressive(self.items.peek());
 }
 function isItemFiltered(item) {
   return item > 5;
