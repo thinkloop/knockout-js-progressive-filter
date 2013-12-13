@@ -9,6 +9,7 @@ It works by processing small, minimally-blocking chunks of data at a time, rende
 The example fiddle progressively loads 10,000 random "folders" on startup - notice that scrolling and the UI remain smooth. If you type some characters into the input box below the title, you will see the results filter down gradually and without blocking.
 
 ###Basic Usage###
+Progressively load all items in a collection one at a time.
 ```html
 var viewModel = {
   // main collection
@@ -24,6 +25,7 @@ var viewModel = {
 ```
 
 ###Common Usage###
+Progressively load items that match custom filter function in batches, rather than one at a time. 
 ```html
 var viewModel = {
   self.items = ko.observableArray();
@@ -32,7 +34,7 @@ var viewModel = {
   self.filteredItems.extend({progressivefilter: { 
     batchSize: 3, 
     filterFunction: function isItemFiltered(item) {
-      return item > 3;
+      return item > 5;
     } 
   }});
   
@@ -43,6 +45,7 @@ var viewModel = {
 ```
 
 ###Advanced Usage###
+Use custom function for how an item gets added to collection. Use custom function for how collection is cleared.
 ```html
 var viewModel = {
   self.items = ko.observableArray();
@@ -60,7 +63,7 @@ var viewModel = {
   }  
 }
 function isItemFiltered(item) {
-  return item > 3;
+  return item > 5;
 }
 function addFunction(item) {
   self.filteredItems.push(item);
