@@ -10,7 +10,7 @@ The example fiddle progressively loads 10,000 random "folders" on startup - noti
 
 ###Basic Usage###
 Progressively load all items in a collection, one-by-one.
-```html
+```javascript
 var viewModel = {
   // main collection
   self.items = ko.observableArray([1,2,3,4,5,6,7,8,9]);
@@ -26,20 +26,19 @@ var viewModel = {
 
 ###Common Usage###
 Progressively load items that match provided filter function, in batches (rather than one at a time). 
-```html
+```javascript
 var viewModel = {
   self.items = ko.observableArray([1,2,3,4,5,6,7,8,9]);
   
   self.filteredItems = ko.observableArray();
-  self.filteredItems.extend({progressivefilter: { 
-    // batch size
-    batchSize: 3,
-    
-    // filter function
-    filterFunction: function isItemFiltered(item) {
-      return item > 5;
-    } 
-  }});
+  self.filteredItems.extend({
+    progressivefilter: { 
+      batchSize: 3, // batch size
+      filterFunction: function isItemFiltered(item) { // filter function
+        return item > 5;
+      } 
+    }
+  });
   
   self.filteredItems.filterProgressive(self.items.peek());
 }
@@ -47,20 +46,18 @@ var viewModel = {
 
 ###Advanced Usage###
 Use custom function for how an item gets added to collection. Use custom function for how collection is cleared.
-```html
+```javascript
 var viewModel = {
   self.items = ko.observableArray([1,2,3,4,5,6,7,8,9]);
   
   self.filteredItems = ko.observableArray();
-  self.filteredItems.extend({progressivefilter: {
-    batchSize: 3,
-    filterFunction: isItemFiltered,
-    
-    // custom add function
-    addFunction: addFunction,
-    
-    // custom clear function
-    clearFunction: clearFunction }
+  self.filteredItems.extend({
+    progressivefilter: {
+      batchSize: 3,
+      filterFunction: isItemFiltered,
+      addFunction: addFunction, // custom add function
+      clearFunction: clearFunction // custom clear function
+    }
   });
   
   self.filteredItems.filterProgressive(self.items.peek());
