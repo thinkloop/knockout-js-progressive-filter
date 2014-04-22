@@ -72,3 +72,5 @@ function clearFunction() {
   self.filteredItems.removeAll();
 }
 ```
+
+###Don't hesitate to ask questions in issues or star the repo if you like it!###
